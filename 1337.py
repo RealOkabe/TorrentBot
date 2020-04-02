@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup
 
 
 baseurl = 'https://1337x.to'
+user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'
+headers =  {'User-Agent': user_agent}
 
 # Function to search on 1337x.to
 def searchtor(quer):
@@ -19,20 +21,18 @@ def searchtor(quer):
     else:
         tempurl = baseurl + f'/search/{quer}/1/'
 
-    user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'
-    headers =  {'User-Agent': user_agent}
     res = requests.get(tempurl, headers = headers)
 
     if str(res) == '<Response [200]>' and res.text != '':
+        # Finding all links
+        parsed = BeautifulSoup(res.text, 'html.parser').findAll('a')
 
-        # Check if no results were found
-        if len(list(BeautifulSoup(res.text, 'html.parser').findAll('p'))):
+        # Check if no links were found
+        if len(list(BeautifulSoup(res.text, 'html.parser').findAll('p'))) == 2:
             # return the text that is displayed on the website
             return(BeautifulSoup(res.text, 'html.parser').findAll('p')[0].getText())
-
-        # Finding all links
         else:
-            parsed = BeautifulSoup(res.text, 'html.parser').findAll('a')
+            # Since first 35 a contain useless urls
             torList = []
             urlList = []
             for i in parsed:
@@ -49,6 +49,13 @@ def searchtor(quer):
     else:
         return("It seems there is a problem with the bot please contact @RintarouOkabe")
 
-a = input("Enter search query : ")
+def getMagnet(torUrl):
+    parsed = BeautifulSoup(requests.get(torUrl, headers = headers).text, 'html.parser').findAll('a')
+    for i in parsed:
+        temp = str(i['href'])
+        if 'magnet' in temp:
+            return(temp)
 
-print(searchtor(a))
+a = input("Enter search query : ")
+b = searchtor(a)
+print(getMagnet(list(b.values())[1]))
