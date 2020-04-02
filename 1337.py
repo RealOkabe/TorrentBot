@@ -1,6 +1,6 @@
 import requests
-#import urllib.request
-#import time
+import telegram
+from telegram.ext import Updater, CommandHandler
 from bs4 import BeautifulSoup
 
 
@@ -8,6 +8,34 @@ from bs4 import BeautifulSoup
 baseurl = 'https://1337x.to'
 user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'
 headers =  {'User-Agent': user_agent}
+# Your bot token here.
+token = ''
+bot = telegram.Bot(token)
+# Your id here
+id = ''
+updater = Updater(token, use_context=True)
+dispatcher = updater.dispatcher
+
+def search1337(update, context):
+    quer = update.message.text[8:]
+    results = searchtor(quer)
+    if isinstance(results, str):
+        print(results)
+        bot.sendMessage(id, results)
+    else:
+        tors = 'Please select which torrent you would like to mirror: \n\n'
+        count = 1
+        for i in results.keys():
+            tors = tors + str(count) + '. ' + i + '\n\n'
+            count = count + 1
+        bot.sendMessage(id, tors)
+
+
+
+testhandler = CommandHandler('search', search1337)
+dispatcher.add_handler(testhandler)
+updater.start_polling()
+
 
 # Function to search on 1337x.to
 def searchtor(quer):
@@ -56,6 +84,6 @@ def getMagnet(torUrl):
         if 'magnet' in temp:
             return(temp)
 
-a = input("Enter search query : ")
-b = searchtor(a)
-print(getMagnet(list(b.values())[1]))
+#a = input("Enter search query : ")
+#b = searchtor(a)
+#print(getMagnet(list(b.values())[1]))
