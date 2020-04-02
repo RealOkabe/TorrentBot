@@ -24,14 +24,15 @@ def searchtor(quer):
     res = requests.get(tempurl, headers = headers)
 
     if str(res) == '<Response [200]>' and res.text != '':
-        # Finding all links
-        parsed = BeautifulSoup(res.text, 'html.parser').findAll('a')
 
-        # If the result is not found only 37 links are found
-        if len(list(parsed)) == 37:
-            return('No results found for the search. Please try again.')
+        # Check if no results were found
+        if len(list(BeautifulSoup(res.text, 'html.parser').findAll('p'))):
+            # return the text that is displayed on the website
+            return(BeautifulSoup(res.text, 'html.parser').findAll('p')[0].getText())
+
+        # Finding all links
         else:
-            # Since first 35 a contain useless urls
+            parsed = BeautifulSoup(res.text, 'html.parser').findAll('a')
             torList = []
             urlList = []
             for i in parsed:
