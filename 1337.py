@@ -1,6 +1,5 @@
-import requests
-import telegram
-from telegram.ext import Updater, CommandHandler
+import requests, json, os, telegram
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Dispatcher
 from bs4 import BeautifulSoup
 
 
@@ -15,6 +14,7 @@ bot = telegram.Bot(token)
 id = ''
 updater = Updater(token, use_context=True)
 dispatcher = updater.dispatcher
+fileName = 'tor.json'
 
 def search1337(update, context):
     quer = update.message.text[8:]
@@ -29,11 +29,33 @@ def search1337(update, context):
             tors = tors + str(count) + '. ' + i + '\n\n'
             count = count + 1
         bot.sendMessage(id, tors)
+        with open(fileName, 'w') as torFile:
+            json.dump(results, torFile)
 
+def sendMagnet(update, context):
+    userChoice = update.message.text
+    if len(userChoice) <=2 and len(userChoice) > 0:
+        if userChoice.isdigit():
+            torChoice = int(userChoice)
+            if os.path.exists(fileName):
+                with open(fileName) as torfile:
+                    torrdata = list(json.load(torfile).values())
+                    print(torrdata)
+                msg = getMagnet(torrdata[torChoice - 1])
+                print(msg)
+                bot.sendMessage(id, msg)
+                os.remove(fileName)
+        else:
+            print(type(int(userChoice)))
+            bot.sendMessage(id, 'Please send a number to select your torrent.')
+    else:
+        bot.sendMessage(id, 'Please send a valid number to select your torrent.')
 
 
 testhandler = CommandHandler('search', search1337)
+magnethandler = MessageHandler(Filters.text, sendMagnet)
 dispatcher.add_handler(testhandler)
+dispatcher.add_handler(magnethandler)
 updater.start_polling()
 
 
