@@ -10,7 +10,6 @@ headers =  {'User-Agent': user_agent}
 # Your bot token here.
 token = ''
 bot = telegram.Bot(token)
-# Your id here
 id = ''
 updater = Updater(token, use_context=True)
 dispatcher = updater.dispatcher
@@ -18,6 +17,7 @@ fileName = 'tor.json'
 
 def search1337(update, context):
     quer = update.message.text[8:]
+    id = update.message.chat_id
     results = searchtor(quer)
     if isinstance(results, str):
         print(results)
@@ -34,10 +34,11 @@ def search1337(update, context):
 
 def sendMagnet(update, context):
     userChoice = update.message.text
-    if len(userChoice) <=2 and len(userChoice) > 0:
-        if userChoice.isdigit():
-            torChoice = int(userChoice)
-            if os.path.exists(fileName):
+    id = update.message.chat_id
+    if os.path.exists(fileName):
+        if len(userChoice) <=2 and len(userChoice) > 0:
+            if userChoice.isdigit():
+                torChoice = int(userChoice)
                 with open(fileName) as torfile:
                     torrdata = list(json.load(torfile).values())
                     print(torrdata)
@@ -47,9 +48,7 @@ def sendMagnet(update, context):
                 os.remove(fileName)
         else:
             print(type(int(userChoice)))
-            bot.sendMessage(id, 'Please send a number to select your torrent.')
-    else:
-        bot.sendMessage(id, 'Please send a valid number to select your torrent.')
+            bot.sendMessage(id, 'Please send a valid number to select your torrent.')
 
 
 testhandler = CommandHandler('search', search1337)
