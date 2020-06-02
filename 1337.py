@@ -73,11 +73,10 @@ def sendMagnet(update, context):
     id = update.message.chat_id
     if os.path.exists(fileName):
         if userChoice.isdigit():
-        	torChoice = int(userChoice)
+            torChoice = int(userChoice)
             if len(userChoice) <=2 and len(userChoice) > 0 and torChoice <= 10:
                 with open(fileName) as torfile:
                     torrdata = list(json.load(torfile).values())
-                    print(torrdata)
                 msg = getMagnet(torrdata[torChoice - 1]['url'])
                 bot.sendMessage(id, msg)
                 os.remove(fileName)
