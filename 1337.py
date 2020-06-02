@@ -9,7 +9,7 @@ user_agent = 'api'
 headers =  {'User-Agent': user_agent}
 
 # Your bot token here.
-token = ''
+token = '1021151858:AAGb-WL__cbF4Sf1keIuJkv6NQXQsYvWLJA'
 bot = telegram.Bot(token)
 id = ''
 updater = Updater(token, use_context=True)
@@ -81,7 +81,7 @@ def getMagnet(torUrl):
             return(temp)
 
 if __name__ == '__main__':    
-    testhandler = CommandHandler('torrent', search1337)
+    testhandler = CommandHandler('search', search1337)
     magnethandler = MessageHandler(Filters.text, sendMagnet)
     dispatcher.add_handler(testhandler)
     dispatcher.add_handler(magnethandler)
