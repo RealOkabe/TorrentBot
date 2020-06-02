@@ -8,8 +8,8 @@ base_url = 'https://1337x.to'
 user_agent = 'api'
 headers =  {'User-Agent': user_agent}
 
-# Your bot token here. This is a dummy token. You need to make a bot using BotFather and get a new token from there.
-token = '1021151858:AAGb-WL__cbF4Sf1keIuJkv6NQXQsYvWLJA'
+# Your bot token here.
+token = ''
 bot = telegram.Bot(token)
 id = ''
 updater = Updater(token, use_context=True)
