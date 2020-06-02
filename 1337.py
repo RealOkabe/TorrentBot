@@ -9,7 +9,7 @@ user_agent = 'api'
 headers =  {'User-Agent': user_agent}
 
 # Your bot token here.
-token = '1021151858:AAGb-WL__cbF4Sf1keIuJkv6NQXQsYvWLJA'
+token = ''
 bot = telegram.Bot(token)
 id = ''
 updater = Updater(token, use_context=True)
@@ -24,15 +24,15 @@ def search1337(update, context):
     id = update.message.chat_id
     results = searchTor(quer)
     if isinstance(results, str):
-        print(results)
-        bot.sendMessage(id, results)
+        bot.sendMessage(id, f"<b>{results}</b>", parse_mode="html")
     else:
         tors = 'Please select which torrent you would like to mirror: \n\n'
         count = 1
         for i in results.values():
-            tors = tors + str(count) + '. ' + i['name'] + "\nSeeders: " + i['seeders'] + "\nLeechers: " + i['leechers'] + "\nDate Added: " + i['date_added'] + "\nSize: " + i['size'] + '\n\n'
+            tors = tors + str(count) + '. ' + f"<code>{i['name']}</code>" + "\n<b>Seeders:</b> " + f"<code>{i['seeders']}</code>" + "\n<b>Leechers:</b> "
+             + f"<code>{i['leechers']}</code>" + "\n<b>Date Added:</b> " + f"<code>{i['date_added']}</code>" + "\n<b>Size:</b> " + f"<code>{i['size']}</code>" + '\n\n'
             count = count + 1
-        bot.sendMessage(id, tors)
+        bot.sendMessage(id, tors, parse_mode="html")
         with open(fileName, 'w') as torFile:
             json.dump(results, torFile)
 
@@ -52,7 +52,7 @@ def sendMagnet(update, context):
                 os.remove(fileName)
         else:
             print(type(int(userChoice)))
-            bot.sendMessage(id, 'Please send a valid number to select your torrent.')
+            bot.sendMessage(id, '<b>Please send a valid number to select your torrent.</b>', parse_mode="html")
 
 # Function to search on 1337x.to
 def searchTor(quer):
@@ -69,7 +69,10 @@ def searchTor(quer):
     dateList = parsed.findAll('td', {"class": "coll-date"})
     sizeList = parsed.findAll('td', {"class": "size"})
     torData = {}
-    for i in range(0, len(nameList)):
+    llen = len(nameList)
+    if llen > 10:
+    	llen = 10
+    for i in range(0, llen):
         torData[f"t{i}"] = {"name": nameList[i].contents[1].text, "url": base_url + nameList[i].contents[1]['href'], "seeders": seedList[i].text, "leechers": leechList[i].text, "date_added": dateList[i].text, "size": sizeList[i].contents[0]}
     return torData
 
@@ -81,7 +84,7 @@ def getMagnet(torUrl):
             return(temp)
 
 if __name__ == '__main__':    
-    testhandler = CommandHandler('search', search1337)
+    testhandler = CommandHandler('torrent', search1337)
     magnethandler = MessageHandler(Filters.text, sendMagnet)
     dispatcher.add_handler(testhandler)
     dispatcher.add_handler(magnethandler)
