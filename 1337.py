@@ -81,7 +81,7 @@ def getMagnet(torUrl):
             return(temp)
 
 if __name__ == '__main__':    
-    testhandler = CommandHandler('search', search1337)
+    testhandler = CommandHandler('torrent', search1337)
     magnethandler = MessageHandler(Filters.text, sendMagnet)
     dispatcher.add_handler(testhandler)
     dispatcher.add_handler(magnethandler)
