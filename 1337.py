@@ -80,8 +80,6 @@ def sendMagnet(update, context):
                 msg = getMagnet(torrdata[torChoice - 1]['url'])
                 bot.sendMessage(id, msg)
                 os.remove(fileName)
-        else:
-            bot.sendMessage(id, '<b>Please send a valid number to select your torrent.</b>', parse_mode="html")
 
 if __name__ == '__main__':    
     testhandler = CommandHandler('torrent', search1337)
