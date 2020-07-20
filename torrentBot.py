@@ -12,14 +12,14 @@ fileName1337 = 'tor.json'
 fileNameNyaa = 'animetor.json'
 
 #logging to check for errors. These logs are not saved.
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# logging.basicConfig(level=logging.DEBUG,
+                    # format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 # Function that takes a query on telegram, searches for it on 1337x.to and returns the results to the user.
 def search1337(update, context):
     if os.path.exists(fileNameNyaa):
         os.remove(fileNameNyaa)
-    quer = update.message.text[8:]
+    quer = update.message.text.split(None, 1)[1]
     id = update.message.chat_id
     results = searchOn1337(quer)
     if isinstance(results, str):
@@ -38,7 +38,7 @@ def search1337(update, context):
 def searchNyaa(update, context):
     if os.path.exists(fileName1337):
         os.remove(fileName1337)
-    quer = update.message.text[13:]
+    quer = update.message.text.split(None, 1)[1]
     id = update.message.chat_id
     results = searchOnNyaa(quer)
     if isinstance(results, str):
