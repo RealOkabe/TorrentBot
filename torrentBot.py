@@ -1,5 +1,5 @@
 import logging, json
-from torscraper2 import getTorrents, getAnimeTorrents
+from torscraper import getTorrents, getAnimeTorrents
 from telegram.ext import Updater, InlineQueryHandler
 from telegram import InlineQueryResultArticle, InputTextMessageContent
 
