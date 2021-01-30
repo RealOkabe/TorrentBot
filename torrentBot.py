@@ -36,9 +36,12 @@ def torrentsSearch(update, context):
     else:
         temp = 1
         for i in tempres:
+            moreInfo = ''
+            moreInfo = moreInfo + 'Seeders: ' + i['Seeders'] + ' Leechers: ' + i['Leechers'] + ' Size: ' + i['Size']
             results.append(InlineQueryResultArticle(
                 id=f'{quer.upper()}{temp}',
                 title=i['Name'],
+                description=moreInfo,
                 input_message_content=InputTextMessageContent(i['Magnetlink'])
             ))
             temp = temp + 1
